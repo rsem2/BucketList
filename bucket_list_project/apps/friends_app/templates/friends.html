@@ -22,7 +22,7 @@
     {% for friend in friends %}
     <tr>
         <td>
-            <a href="/other_profile/{{ friend.id }}">
+            <a href="/dashboard/{{ friend.id }}">
                 {{ friend.first_name }} {{ friend.last_name }}
             </a>
         </td>
@@ -42,7 +42,7 @@
         <td>Action</td>
     {% for notfriend in notfriends %}
     <tr>
-        <td><a href="/other_profile/{{ notfriend.id }}">{{ notfriend.first_name }} {{ notfriend.last_name }}</a></td>
+        <td><a href="/dashboard/{{ notfriend.id }}">{{ notfriend.first_name }} {{ notfriend.last_name }}</a></td>
         <td>
             <form action="friends/add_friend/{{request.session.userid }}/{{ notfriend.id }}">
                 <input type="submit" value="Add as friend">

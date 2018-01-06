@@ -12,13 +12,22 @@
     </script>
 </head>
 <body>
+    <div class="topbar">
+        <a href="/dashboard">Home</a>
+        <a href="/logout">Logout</a>
+    </div>
+
     <h1>{{ activity.idea.title }}</h1>    
     <h2>{{ activity.idea.description }}</h2>
     <h3>Deadline: {{ activity.date }}</h3>
     <h3>Created by: {{ activity.activity_creator.first_name }} {{ activity.activity_creator.last_name }}</h3>
     <h3>Who has been tagged?</h3>
     {% for person in people %}
-        <p>{{ person.first_name}} {{ person.last_name }} <a href='/dashboard/remove_person/{{activity.id}}/{{person.id}}'>Untag</a></p>
+        <p>{{ person.first_name}} {{ person.last_name }} 
+            {% if activity.activity_creator == user %}
+                <a href='/dashboard/remove_person/{{activity.id}}/{{person.id}}'>Untag</a>
+            {% endif %}
+        </p>
     {% endfor %} 
         
     <button onclick="showFriends()">Tag more people?</button>
@@ -33,15 +42,22 @@
     </form>
 
     <h3>Posts</h3>
-    {% for post in posts %}
-        <p>{{ post.user.first_name }} says - {{ post.post }}</p>
-        <p>Date added: {{ post.created_at|date:"d F Y" }}</p>
+    {% for post in posts reversed%}
+        <p>{{ post.user.first_name }} says - {{ post.content }}</p>
+        <p>{{ post.created_at|date:"d F Y, P e"}}</p>
+        {% if user == post.user or user == activity.activity_creator %}
+            <form method="get" action="/dashboard/remove_post/{{activity.id}}/{{post.id}}">
+                {% csrf_token %} 
+                <input type="submit" value="Remove post">
+            </form>
+        {% endif %}
     {% endfor %}
+
 
     <h3>Add a post</h3>
     <form action="/dashboard/submit_post/{{activity.id}}" method = 'post'>
         {% csrf_token %}
-        <textarea name="post" cols="90" rows="6"></textarea><br>
+        <textarea name="content" cols="90" rows="6"></textarea><br>
         <input type="submit" value="Add Post">
     </form>
 

@@ -20,9 +20,41 @@
     </div>
     
     <div class="activitystatus">
-        <h1>Activities you want to do</h1>
+        <h1>Activities you've been tagged in</h1>
+        {% for activity in uncompleted %}
+            <p><a href="/dashboard/activity/{{activity.id}}">{{ activity.idea.title }}</a> - {{ activity.idea.description}}</p>
+            {% if activity.people.all|length > 1 %}
+                <p>with: </p> 
+                <ul>
+                    {% for person in activity.people.all %}
+                        {% if person.id != request.session.userid %}
+                            <li><a href='/dashboard/{{person.id}}'>{{ person.first_name }} {{ person.last_name }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <form action='dashboard/completed_activity/{{activity.id}}/{{request.session.userid}}'>
+                <input type="submit" value="Done!">
+            </form> 
+        {% endfor %}
 
-        <h1>Activities you have done</h1>
+        <h1>Activities you've done</h1>
+        {% for activity in completed %}
+            <p><a href="/dashboard/activity/{{activity.id}}">{{ activity.idea.title }}</a> - {{ activity.idea.description}}</p>
+            {% if activity.people.all|length > 1 %}
+                <p>with: </p> 
+                <ul>
+                    {% for person in activity.people.all %}
+                        {% if person.id != request.session.userid %}
+                            <li><a href='/dashboard/{{person.id}}'>{{ person.first_name }} {{ person.last_name }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <form action='dashboard/completed_activity/{{activity.id}}/{{request.session.userid}}'>
+                <input type="submit" value="Actually, maybe I didn't!">
+            </form>  
+        {% endfor %}
     </div>
 
     <div class="sidebar">
@@ -33,6 +65,9 @@
 
         <div class="ideas">
             <h3>Inspiration!</h3>
+            {% for i in idea %}
+                <h5><a href="/dashboard/idea/{{i.id}}">{{i.title}}</a> ?!?!</h5>
+            {% endfor %}
         </div>
     </div>
 

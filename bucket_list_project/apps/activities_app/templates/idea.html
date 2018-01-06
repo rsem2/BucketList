@@ -54,9 +54,7 @@
     <h1>Add to your bucket list!</h1>
         <form action='/dashboard/add_activity/{{idea.id}}' method='post'>
             {% csrf_token %}
-            <!-- <input type="hidden" value=false name="completed"> -->
- 
-            
+
             <p>
                 Do you want to tag friends with this activity?
                 <select onchange="showfield(this.options[this.selectedIndex].value)">

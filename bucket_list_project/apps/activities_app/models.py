@@ -6,19 +6,24 @@ from ..users_app.models import User
 class UserManager(models.Manager):
     def createIdea(self, postData, user):
         if len(str(postData['title']))>0:         
-            self.create(title = postData['title'], description = postData['description'], toughness = postData['toughness'], time = postData['time'],cost = postData['cost'], idea_creator=user.id)
+            self.create(title = postData['title'], description = postData['description'], toughness = postData['toughness'], time = postData['time'],cost = postData['cost'], idea_creator=user)
             idea = self.last()
         else:
             idea = self.get(id = postData['idea_drop'])
         return idea
     
-    def createActivity(self, postData, idea, user):    
+    def createActivity(self, postData, idea, user):  
+        print postData['privacy']
+        postData['date']
+        print idea
+        print user
         self.create(completed=False, privacy=postData['privacy'], date=postData['date'], idea=idea, activity_creator=user)  
-        activity = self.last()        
+        activity = self.last()  
+        print activity
+        print postData.getlist('people[]')
         for person in postData.getlist('people[]'):
             activity.people.add(User.objects.get(id=person))
             activity.save()
-
         return self.last()
 
     def addPeople(self, postData, activity):
@@ -32,8 +37,13 @@ class UserManager(models.Manager):
         return activity
 
     def createPost(self, postData, activity, user):
-        self.create(content = postData['content'], activity=activity, user = user)
-        return self.last()
+        self.create(content = postData['content'], activity = activity, user = user)
+        post = self.last()
+        return post
+
+    def removePost(self, post):
+        post.delete()
+        return
 
 
 class Idea(models.Model):
